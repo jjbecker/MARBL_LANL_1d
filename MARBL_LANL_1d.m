@@ -115,7 +115,7 @@ marbl_constants_fname= 'default_chemistry.input';
 % variable that depends on if isotopes are being calculated.
 
 lciso_on = 0;
-[ioerr, ~, MARBL_depth_unit, interior, surface ] = init_marbl (sim.dt, nstep, marbl_constants_fname, lciso_on, sim.domain);
+[ioerr, ~, MARBL_depth_unit, interior, surface ] = init_marbl (marbl_constants_fname, lciso_on, sim.domain);
 
 [ interior, surface ] = init_structs( interior, surface, bgc, sim, time_series_loc);
 
