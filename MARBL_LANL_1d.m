@@ -65,6 +65,7 @@ fprintf("%s.m: Using CESM 3 deg grid vertical grid\n", mfilename)
 % load('MARBL_IC_3d.mat');
 load('demo_data');
 
+
 getMemSize(bgc);
 getMemSize(sim);
 
