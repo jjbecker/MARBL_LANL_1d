@@ -21,7 +21,7 @@ fprintf('%s.m: upwelling = %.3g (m/s)\n', mfilename, w)
 % enhanced diffusivity in mixed layer
 
 mixed_layer_thickness = 100.;    % meters
-fprintf('%s.m: mixed_layer_thickness = %g\n', mfilename, mixed_layer_thickness)
+fprintf('%s.m: mixed_layer_thickness = %g (m)\n', mfilename, mixed_layer_thickness)
 av = @(z) (z>-mixed_layer_thickness).*(0.1)+4e-4;
 
 T = fp_ad(interior.domain, size(interior.domain.zw,2), av, w);

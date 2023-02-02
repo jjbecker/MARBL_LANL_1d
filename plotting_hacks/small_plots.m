@@ -1,6 +1,6 @@
 function small_plots ( surface, interior, lciso_on, time_series )
 
-disp ' '; disp 'Make a lot of little plots to see if everything is running. Takes about 10 (s)...'
+fprintf('\n%s.n: Make a lot of little DEBUG plots ~20 (s)...\n', mfilename)
 
 tic;
 
@@ -18,7 +18,7 @@ t = (0:size(time_series.tracer, 3)-1) /dx;
 
 idx = 151;
 
-disp 'Make a 3D plot of a PAR, say 7 days, starting day 1...'
+fprintf('%s.m: Make a 3D plot of a PAR, say 7 days, starting at day 1...\n', mfilename);
 start_day = 1;
 n_days = 7;
 n_cnt = floor(n_days* const.sec_d/dt);
@@ -146,6 +146,6 @@ fig = plot_log(fig, myTitle, t, myData, myName,idx, false);
 % % 
 
 elapsedTime = toc;
-disp(['small_plots.m runtime: ', num2str(elapsedTime, '%1.0f'), ' (s)'])
+fprintf('%s.m: runtime: %s (s)\n', mfilename,num2str(elapsedTime, '%1.0f'))
 
 end % small_plots.m

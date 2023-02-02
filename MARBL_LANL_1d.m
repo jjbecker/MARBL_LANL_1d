@@ -12,14 +12,14 @@ addpath ("MEX", "plotting_hacks", "namesAndUnits")
 % Includes an over simplified advection and diffusion model. 
 % 
 % MARBL is finicky about unphysical tracer or forcing values, and debugging
-% MARBL crashes is difficult. So the main chore here is finding a set of 
+% MARBL crashes is difficult. So main chore here is finding a set of 
 % tracers, forcings, grid spacing and so on to get a model working, 
 %
 % To simplify this demo, essentially all data are read from a working UCI
 % 3d simulation that is based on MARBL and "transport matrices". Only a 
 % handfull of ~500 MB input of that file is actually used in this demo,
-% because we only want one of the 7,881 water columns available. But in the
-% interest of time, the complete 3d data set is input and then discarded.
+% because we only want one of 7,881 water columns available. But in the
+% interest of time, complete 3d data set is input and then discarded.
 %
 % 
 %
@@ -74,9 +74,6 @@ sim.dt = 1 *sim.const.sec_h;
 fprintf("%s.m: time step is %d (s) or %g (h)\n", mfilename, sim.dt, round(sim.dt/3600))
 
 num_yr = 3;
-fprintf("%s.m: Simulating %g (y)\n", mfilename, num_yr)
-fprintf("%s.m: Simulation time will be very approxiamtely %g (s)...\n", mfilename, num_yr*44)
-fprintf("%s.m: ...plus another 20-30 seconds for making some hacked up plots of result ...\n\n", mfilename)
 
 tot_t = round ( num_yr *sim.const.sec_y );
 nstep = round ( tot_t /sim.dt );
@@ -156,22 +153,17 @@ tic
 % Set bottom depth at this water column
 mex_marbl_driver('set_depth', interior.domain.kmt)
 
-% FIXME: first call to surface update can be garbage. Uninitialized
-% var? Call it  on first time step and discard the result for now...
-% FIXME:
-interior.state_old  = interior.state;
-interior.tracer_old = interior.tracer;
-ignore = 1;
-[surface, interior] = update_surface ( surface, interior, ignore, MARBL_depth_unit );
-% Calculate surface flux and update TENDENCY with it
-
-n = 1;
-if (n == 1)
+% FIXME: first call to surface update can be garbage. Uninitialized var? 
+% FIXME: Call update_surface  before first time step and discard result, for now...
+    interior.state_old  = interior.state;
+    interior.tracer_old = interior.tracer;
     ignore = 1;
     [surface, interior] = update_surface ( surface, interior, ignore, MARBL_depth_unit );
-end
-ignore = 0;
+    ignore = 0;
 
+fprintf("\n%s.m: Simulating %g (y)\n", mfilename, num_yr)
+fprintf("%s.m: Simulation time will be very approxiamtely %g (s)...\n", mfilename, num_yr *5) % ad hoc
+fprintf("%s.m: ...plus another ~30 seconds for making many hacked plots of result\n\n", mfilename)
 for n=1:nstep
 
     % FIXME: use midpoint of time step for surface flux update ???
@@ -185,10 +177,11 @@ for n=1:nstep
 
     [surface, interior] = update_forcing ( sim.dt*(n-1), surface, interior );
 
-    % update the interior and surface forcing.
+    % update interior and surface forcing.
     % FIXME: use midpoint of time step for surface flux update ???
 
     interior = update_interior ( interior );
+    ignore = 0;
     [surface, interior] = update_surface ( surface, interior, ignore, MARBL_depth_unit);
 
     % add suface tendency to top of interior tendency
@@ -209,7 +202,7 @@ for n=1:nstep
     % trapizoid rule time step.
     %
     % Add fake diffusion using "toy" advection model from Francois. Be sure
-    % that result does NOT have any garbage below the ocean bottom (kmt)
+    % that result does NOT have any garbage below ocean bottom (kmt)
     
     interior.tracer = interior.tracer +sim.dt*tendency;
 
@@ -272,8 +265,8 @@ small_plots( surface, interior, lciso_on, time_series );
 plot_3D(100, interior, time_series);
 pause(1); 
 autoArrangeFigures();           % use all of screen
-autoArrangeFigures(0,0,2);      % useful if you have 2 or more displays
-% disp('Saving all the small plots. Takes about 10 (s)...'); saveFigs(pwd);
+% autoArrangeFigures(0,0,2);      % useful if you have 2 or more displays
+% disp('Saving all small plots. Takes about 10 (s)...'); saveFigs(pwd);
 
 
 %%

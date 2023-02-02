@@ -2,7 +2,9 @@ function fig = plot_3D(fig, interior, time_series)
 %UNTITLED5 Summary of this function goes here
 %   Detailed explanation goes here
 
-fprintf("%s.m: Making 3D mesh plots which can be VERY slow if plotting large sim; e.g. 10 year w/1hr time step (~100k time steps)\n", mfilename)
+tic;
+
+fprintf("%s.m: Making 3D plots which are VERY slow for long sims; e.g. 10 yr w/1 hr dt -> ~100k time steps to plot\n", mfilename)
 dt      = time_series.dt;
 nstep   = time_series.nstep;
 
@@ -40,4 +42,6 @@ for i = idx
     fig = plot3dDiagTimeSeries(fig, time_series.diag, interior, i, nstep, dt);
 end
 
+elapsedTime = toc;
+fprintf('%s.m: runtime: %s (s)\n', mfilename,num2str(elapsedTime, '%1.0f'))
 end
