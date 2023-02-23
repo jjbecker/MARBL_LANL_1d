@@ -210,6 +210,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
       if (marbl_instance%StatusLog%labort_marbl) then
         write(msg, *) 'MARBL ABORT: surface_flux_compute(): labort_marbl', "\n";
 !         call mexPrintf(msg)
+! return a non zero status so Matlab code knows MARBL failed.
         call mexWarnMsgTxt(msg)
         x_r8 = 456
       end if      
@@ -223,6 +224,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
         write(msg, *) 'MARBL ABORT: interior_tendency_compute: labort_marbl', "\n";
 !         call mexPrintf(msg)
         call mexWarnMsgTxt(msg)
+! return a non zero status so Matlab code knows MARBL failed.
         x_r8 = 789
       end if
       call outputReal ( x_r8 )
